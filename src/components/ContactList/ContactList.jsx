@@ -2,12 +2,12 @@ import React from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import styles from './ContactList.module.css';
 import PropTypes from 'prop-types';
-import { deleteContact } from '../../Redux/ContactsReducer'; 
+import { deleteContactAsync } from '../../Redux/operations';
 
-const Contact = ({ id, name, number, onDeleteClick }) => {
+const Contact = ({ id, name, phone, onDeleteClick }) => {
   return (
     <li className={styles.listItem}>
-      {name}: {number}
+      {name}: {phone || 'No number provided'}
       <button onClick={() => onDeleteClick(id)}>Delete</button>
     </li>
   );
@@ -16,22 +16,35 @@ const Contact = ({ id, name, number, onDeleteClick }) => {
 Contact.propTypes = {
   id: PropTypes.string.isRequired,
   name: PropTypes.string.isRequired,
-  number: PropTypes.string.isRequired,
+  phone: PropTypes.string.isRequired,
   onDeleteClick: PropTypes.func.isRequired,
 };
 
 const ContactList = () => {
   const contacts = useSelector((state) => state.contacts.contacts);
   const filter = useSelector((state) => state.contacts.filter);
-  const dispatch = useDispatch(); 
+  const dispatch = useDispatch();
 
   const filteredContacts = contacts.filter((contact) =>
     contact.name.toLowerCase().includes(filter)
   );
 
-  const handleDeleteContact = (contactId) => {
+  const handleDeleteContact = async (contactId) => {
+    try {
+     
+      const existingContact = contacts.find((contact) => contact.id === contactId);
+
+      if (!existingContact) {
+        alert(`Contact with ID "${contactId}" not found.`);
+        return;
+      }
+
+      await dispatch(deleteContactAsync({ endpoint: 'contacts', id: contactId }));
+      
    
-    dispatch(deleteContact(contactId));
+    } catch (error) {
+      console.error("An error occurred while deleting the contact: ", error);
+    }
   };
 
   return (
@@ -43,7 +56,7 @@ const ContactList = () => {
               key={contact.id}
               id={contact.id}
               name={contact.name}
-              number={contact.number}
+              phone={contact.phone}
               onDeleteClick={handleDeleteContact} 
             />
           ))}

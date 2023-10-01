@@ -1,35 +1,32 @@
-
 import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { addContact } from '../../Redux/ContactsReducer';
+import { createContactAsync, selectContacts } from '../../Redux/SliceReducer';
 import styles from './ContactForm.module.css';
 import { nanoid } from 'nanoid';
 
 const ContactForm = () => {
   const dispatch = useDispatch();
-  const contacts = useSelector((state) => state.contacts.contacts);
+  const contacts = useSelector(selectContacts);
 
   const [name, setName] = useState('');
-  const [number, setNumber] = useState('');
+  const [phone, setPhone] = useState('');
 
   const handleSubmit = (event) => {
     event.preventDefault();
 
-    if (name.trim() === '' || number.trim() === '') return;
+    if (name.trim() === '' || phone.trim() === '') return;
 
-    if (
-      contacts.some(
-        (contact) => contact.name.toLowerCase() === name.toLowerCase()
-      )
-    ) {
-      alert(`Contact with the name "${name}" already exists.`);
-    } else {
-      
-      const id = nanoid();
-      dispatch(addContact({ id, name, number }));
-      setName('');
-      setNumber('');
+    const contactExists = contacts.some((contact) => contact.name === name);
+
+    if (contactExists) {
+      alert('Kontakt już istnieje.'); 
+      return; 
     }
+
+    const id = nanoid();
+    dispatch(createContactAsync({ endpoint: 'contacts', contactData: { id, name, phone } }));
+    setName('');
+    setPhone('');
   };
 
   return (
@@ -45,14 +42,16 @@ const ContactForm = () => {
       />
       <input
         type="tel"
-        name="number"
+        name="phone"
         required
-        value={number}
-        onChange={(e) => setNumber(e.target.value)}
-        placeholder="Number"
+        value={phone}
+        onChange={(e) => setPhone(e.target.value)}
+        placeholder="Phone"
         className={styles.input}
       />
-      <button type="submit" className={styles.button}>Add Contact</button>
+      <button type="submit" className={styles.button}>
+        Add Contact
+      </button>
     </form>
   );
 };
