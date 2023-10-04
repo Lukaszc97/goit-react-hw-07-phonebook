@@ -1,10 +1,7 @@
-
 import { createSlice } from '@reduxjs/toolkit';
-import { fetchContactsAsync, deleteContactAsync,createContactAsync } from './operations';
+import { fetchContactsAsync, deleteContactAsync, createContactAsync } from './operations';
 
-
-
-const contactsSlice = createSlice({
+const contactsReducer = createSlice({
   name: 'contacts',
   initialState: {
     contacts: [],
@@ -14,7 +11,7 @@ const contactsSlice = createSlice({
   },
   reducers: {
     setFilter(state, action) {
-      state.filter = action.payload;
+      state.filter = action.payload.toLowerCase();
     },
   },
   extraReducers: (builder) => {
@@ -61,10 +58,25 @@ const contactsSlice = createSlice({
   },
 });
 
-export const { setFilter } = contactsSlice.actions;
+
+const filterReducer = createSlice({
+  name: 'filter',
+  initialState: '', 
+  reducers: {
+    setFilter(state, action) {
+      return action.payload.toLowerCase();
+    },
+  },
+});
+
+export const { setFilter } = contactsReducer.actions;
 export const selectContacts = (state) => state.contacts.contacts;
-export const selectFilter = (state) => state.contacts.filter;
+export const selectFilter = (state) => state.filter;
 export const selectLoading = (state) => state.contacts.isLoading;
 export const selectError = (state) => state.contacts.error;
-export { createContactAsync }
-export default contactsSlice.reducer;
+export { createContactAsync };
+
+export default contactsReducer.reducer;
+
+
+export { filterReducer };

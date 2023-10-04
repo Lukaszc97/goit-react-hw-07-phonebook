@@ -4,11 +4,11 @@ import { setFilter } from '../../Redux/SliceReducer';
 import styles from './Filter.module.css';
 
 const Filter = () => {
-  const filter = useSelector((state) => state.filter);
+  const filter = useSelector((state) => state.contacts.filter);
   const dispatch = useDispatch();
 
   const handleFilterChange = (event) => {
-    const searchTerm = event.target.value.toLowerCase();
+    const searchTerm = event.target.value;
     dispatch(setFilter(searchTerm));
   };
 
