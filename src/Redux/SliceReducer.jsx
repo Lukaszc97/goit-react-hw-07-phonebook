@@ -4,7 +4,7 @@ import { fetchContactsAsync, deleteContactAsync,createContactAsync } from './ope
 
 
 
-const contactsReducer = createSlice({
+const contactsSlice = createSlice({
   name: 'contacts',
   initialState: {
     contacts: [],
@@ -61,10 +61,10 @@ const contactsReducer = createSlice({
   },
 });
 
-
+export const { setFilter } = contactsSlice.actions;
 export const selectContacts = (state) => state.contacts.contacts;
 export const selectFilter = (state) => state.contacts.filter;
 export const selectLoading = (state) => state.contacts.isLoading;
 export const selectError = (state) => state.contacts.error;
 export { createContactAsync }
-export default contactsReducer.reducer;
+export default contactsSlice.reducer;
