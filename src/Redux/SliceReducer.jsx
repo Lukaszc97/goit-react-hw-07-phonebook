@@ -42,7 +42,7 @@ const contactsReducer = createSlice({
         state.error = null;
       })
       .addCase(deleteContactAsync.fulfilled, (state, action) => {
-        state.contacts = state.filter((contact) => contact.id !== action.payload);
+        state.contacts = state.contacts.filter((contact) => contact.id !== action.payload);
         state.isLoading = false;
         state.error = null;
       })
