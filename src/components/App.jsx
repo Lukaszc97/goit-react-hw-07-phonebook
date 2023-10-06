@@ -5,7 +5,7 @@ import ContactForm from './ContactForm/ContactForm';
 import ContactList from './ContactList/ContactList';
 import Filter from './Filter/Filter';
 import { fetchContactsAsync } from '../Redux/operations'; 
-import { selectError } from '../Redux/SliceReducer';
+import { selectError } from '../Redux/sliceReducer';
 
 function App() {
   const dispatch = useDispatch();
