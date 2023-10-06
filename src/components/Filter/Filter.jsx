@@ -4,6 +4,7 @@ import { setFilter } from '../../Redux/filterReducer';
 import styles from './Filter.module.css';
 
 const Filter = () => {
+  const contacts = useSelector((state) => state.contacts.contacts);
   const filter = useSelector((state) => state.filter);
   const dispatch = useDispatch();
 
@@ -11,15 +12,17 @@ const Filter = () => {
     const searchTerm = event.target.value;
     dispatch(setFilter(searchTerm));
   };
-
+  const shouldShowFilter = contacts.length > 1;
   return (
-    <input
-      type="text"
-      value={filter}
-      onChange={handleFilterChange}
-      placeholder="Search contacts by name"
-      className={styles.input}
-    />
+    shouldShowFilter && (
+      <input
+        type="text"
+        value={filter}
+        onChange={handleFilterChange}
+        placeholder="Search contacts by name"
+        className={styles.input}
+      />
+    )
   );
 };
 
